@@ -32,7 +32,7 @@ pygame.init()
 DisplayWidth = 1024
 DisplayHeight = 683
 DISPLAYSURF = pygame.display.set_mode((DisplayWidth, DisplayHeight))
-pygame.display.set_caption("The Guy Game")
+pygame.display.set_caption("Adventure Game")
 FPS = 30
 FPSCLOCK = pygame.time.Clock()
 
@@ -469,6 +469,7 @@ def StartMenu():
     New = True
     xcoord = 212
     Toptext = inventoryFont.render('The Game - use arrow keys and space bar', True, BLACK)
+    loadingFail = False
     while True:
         ycoord = 150
         DISPLAYSURF.blit(background, (0,0))
@@ -486,13 +487,21 @@ def StartMenu():
                     if New == True:
                         newGameStartLocation()
                     else:
-                        importGame()
+                        try:
+                            importGame()
+                        except:
+                            loadingFail = True
+                            New = True
+                            print('Save files not found. Make sure the save files are saved as c:\GuyGameSpriteSave and c:\GuyGamePlayerSave')
         if New == True:
             Newtext = startFont.render('New Game!', True, BLACK)
             Loadtext = inventoryFont.render('Load Game!', True, BLACK)
         else:
             Newtext = inventoryFont.render('New Game!', True, BLACK)
             Loadtext = startFont.render('Load Game!', True, BLACK)
+        if loadingFail:
+            Loadtext = inventoryFont.render('Save files not found. Try a new game.', True, BLACK)
+            New = True
         DISPLAYSURF.blit(Toptext, (xcoord,ycoord))
         ycoord += 50
         DISPLAYSURF.blit(Newtext, (xcoord,ycoord))
